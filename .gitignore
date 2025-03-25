@@ -6,6 +6,8 @@
 # Binaries
 st
 st-*
+kst
+kst-*
 
 # Configuration file (allow config.def.h only)
 config.h
