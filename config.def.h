@@ -8,7 +8,7 @@ static char *font2[] = {
 	"Symbols Nerd Font:pixelsize=14:antialias=true:autohint=true",
 };
 static int borderpx = 2;
-float alpha = 0.98;
+float alpha = 0.80;
 
 /* Kerning / character bounding-box multipliers */
 static float cwscale = 1.0;
