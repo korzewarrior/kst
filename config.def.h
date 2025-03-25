@@ -55,7 +55,7 @@ char *utmp = NULL;
 char *scroll = NULL;
 char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 unsigned int tabspaces = 8;
-char *termname = "st-256color";
+char *termname = "kst-256color";
 char *vtiden = "\033[?6c";
 
 /* UI settings */
