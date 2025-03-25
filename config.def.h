@@ -18,29 +18,29 @@ static float chscale = 0.9;
 static const char *colorname[] = {
 	/* 8 normal colors */
 	"#000000", /* black */
-	"#ff5555", /* red */
-	"#50fa7b", /* green */
-	"#f1fa8c", /* yellow */
-	"#5555ff", /* blue */
-	"#ff79c6", /* magenta */
-	"#8be9fd", /* cyan */
-	"#f8f8f2", /* white */
+	"#cc0000", /* red */
+	"#4e9a06", /* green */
+	"#c4a000", /* yellow */
+	"#3465a4", /* blue */
+	"#75507b", /* magenta */
+	"#06989a", /* cyan */
+	"#d3d7cf", /* white */
 
 	/* 8 bright colors */
-	"#6272a4", /* black */
-	"#ff6e6e", /* red */
-	"#69ff94", /* green */
-	"#ffffa5", /* yellow */
-	"#6e6eff", /* blue */
-	"#ff92df", /* magenta */
-	"#a4ffff", /* cyan */
-	"#ffffff", /* white */
+	"#555753", /* black */
+	"#ef2929", /* red */
+	"#8ae234", /* green */
+	"#fce94f", /* yellow */
+	"#729fcf", /* blue */
+	"#ad7fa8", /* magenta */
+	"#34e2e2", /* cyan */
+	"#eeeeec", /* white */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#f8f8f2", /* foreground */
-	"#282a36", /* background */
+	"#d3d7cf", /* foreground */
+	"#222222", /* background */
 };
 
 /* Default colors (colorname index) */
