@@ -2,10 +2,15 @@
 *.o
 *.so
 *.ko
+*.obj
+*.elf
+
+# Libraries
+*.a
+*.la
+*.lo
 
 # Binaries
-st
-st-*
 kst
 kst-*
 
@@ -20,6 +25,8 @@ config.h
 *~
 \#*\#
 .\#*
+*.swp
+.DS_Store
 
 # Dependencies
 .deps/

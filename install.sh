@@ -1,38 +1,54 @@
 #!/bin/bash
-# Simple installation script for kst terminal
+# kst - Simple terminal installation script
 
-# Colors
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Root check
+# Check if running as root, if not, use sudo
 if [ "$EUID" -ne 0 ]; then
-  echo -e "${RED}Error: Please run as root or with sudo${NC}"
-  exit 1
-fi
-
-# Detect OS
-if [ -f /etc/arch-release ]; then
-  echo -e "${GREEN}Installing dependencies for Arch Linux...${NC}"
-  pacman -S --needed make libx11 libxft libxinerama fontconfig freetype2 harfbuzz
-elif [ -f /etc/debian_version ]; then
-  echo -e "${GREEN}Installing dependencies for Debian/Ubuntu...${NC}"
-  apt install -y make libx11-dev libxft-dev libxinerama-dev libfontconfig1-dev libfreetype6-dev libharfbuzz-dev
-elif [ -f /etc/fedora-release ]; then
-  echo -e "${GREEN}Installing dependencies for Fedora...${NC}"
-  dnf install -y make libX11-devel libXft-devel libXinerama-devel fontconfig-devel freetype-devel harfbuzz-devel
+    SUDO="sudo"
 else
-  echo -e "${RED}Unsupported OS. Please install dependencies manually.${NC}"
-  exit 1
+    SUDO=""
 fi
 
-# Build and install
-echo -e "${GREEN}Building kst...${NC}"
-make clean
-make
-echo -e "${GREEN}Installing kst...${NC}"
-make install
+echo -e "${BLUE}Installing kst - Simple Terminal${NC}"
 
-echo -e "${GREEN}Installation complete! Run 'kst' to launch the terminal.${NC}"
+# Check for dependencies
+echo -e "${YELLOW}Checking dependencies...${NC}"
+DEPS=("make" "cc" "pkg-config" "fontconfig" "freetype2" "xorg-x11")
+MISSING=()
+
+for dep in "${DEPS[@]}"; do
+    if ! command -v $dep >/dev/null 2>&1 && ! pkg-config --exists $dep 2>/dev/null; then
+        MISSING+=($dep)
+    fi
+done
+
+if [ ${#MISSING[@]} -ne 0 ]; then
+    echo -e "${RED}Missing dependencies: ${MISSING[*]}${NC}"
+    echo -e "Please install the required dependencies before continuing."
+    exit 1
+fi
+
+# Compile
+echo -e "${YELLOW}Compiling kst...${NC}"
+make clean
+if ! make; then
+    echo -e "${RED}Compilation failed.${NC}"
+    exit 1
+fi
+
+# Install
+echo -e "${YELLOW}Installing kst...${NC}"
+if ! $SUDO make install; then
+    echo -e "${RED}Installation failed.${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}kst has been successfully installed!${NC}"
+echo -e "${BLUE}Run 'kst' to start the terminal.${NC}"
 exit 0 
