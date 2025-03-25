@@ -1954,90 +1954,55 @@ strhandle(void)
 	char *p = NULL, *dec;
 	int j, narg, par;
 	const struct { int idx; char *str; } osc_table[] = {
-		{ defaultfg, "foreground" },
-		{ defaultbg, "background" },
-		{ defaultcs, "cursor" }
+		{ 0, "?" },
+		{ 1, "icons" },
+		{ 2, "title" },
+		{ 4, "color" },
+		{ 10, "foreground" },
+		{ 11, "background" },
+		{ 12, "cursor" },
+		{ 52, "clipboard" },
+		{ 104, "color" },
+		{ 110, "foreground" },
+		{ 111, "background" },
+		{ 112, "cursor" },
 	};
 
-	term.esc &= ~(ESC_STR_END|ESC_STR);
-	strparse();
-	par = (narg = strescseq.narg) ? atoi(strescseq.args[0]) : 0;
+	strescseq.buf[strescseq.len] = '\0';
 
 	switch (strescseq.type) {
 	case ']': /* OSC -- Operating System Command */
-		switch (par) {
-		case 0:
-			if (narg > 1) {
-				xsettitle(strescseq.args[1]);
-				xseticontitle(strescseq.args[1]);
-			}
-			return;
-		case 1:
-			if (narg > 1)
-				xseticontitle(strescseq.args[1]);
-			return;
-		case 2:
-			if (narg > 1)
-				xsettitle(strescseq.args[1]);
-			return;
-		case 52:
-			if (narg > 2 && allowwindowops) {
-				dec = base64dec(strescseq.args[2]);
-				if (dec) {
-					xsetsel(dec);
-					xclipcopy();
-				} else {
-					fprintf(stderr, "erresc: invalid base64\n");
-				}
-			}
-			return;
-		case 10:
-		case 11:
-		case 12:
-			if (narg < 2)
-				break;
-			p = strescseq.args[1];
-			if ((j = par - 10) < 0 || j >= LEN(osc_table))
-				break; /* shouldn't be possible */
-
-			if (!strcmp(p, "?")) {
-				osc_color_response(par, osc_table[j].idx, 0);
-			} else if (xsetcolorname(osc_table[j].idx, p)) {
-				fprintf(stderr, "erresc: invalid %s color: %s\n",
-				        osc_table[j].str, p);
-			} else {
-				tfulldirt();
-			}
-			return;
-		case 4: /* color set */
-			if (narg < 3)
-				break;
-			p = strescseq.args[2];
-			/* FALLTHROUGH */
-		case 104: /* color reset */
-			j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
-
-			if (p && !strcmp(p, "?")) {
-				osc_color_response(j, 0, 1);
-			} else if (xsetcolorname(j, p)) {
-				if (par == 104 && narg <= 1) {
-					xloadcols();
-					return; /* color reset without parameter */
-				}
-				fprintf(stderr, "erresc: invalid color j=%d, p=%s\n",
-				        j, p ? p : "(null)");
-			} else {
-				/*
-				 * TODO if defaultbg color is changed, borders
-				 * are dirty
-				 */
-				tfulldirt();
-			}
-			return;
+		p = strchr(strescseq.buf, ';');
+		if (!p) {
+			par = atoi(strescseq.buf);
+			narg = -1;
+		} else {
+			*p = '\0';
+			par = atoi(strescseq.buf);
+			narg = atoi(++p);
+			for (j = 0; j < strescseq.len; ++j)
+				if (strescseq.buf[j] == ';')
+					strescseq.buf[j] = '\0';
 		}
-		break;
+
+		/* Silently handle OSC 8 (hyperlink) */
+		if (par == 8)
+			return;
+
+		if (narg < 0 || narg >= LEN(osc_table))
+			break;
+
+		if (!strcmp(strescseq.buf, "?")) {
+			osc_color_response(par, osc_table[narg].idx, 0);
+		} else if (xsetcolorname(osc_table[narg].idx, strescseq.buf)) {
+			fprintf(stderr, "erresc: invalid %s color: %s\n",
+			        osc_table[narg].str, strescseq.buf);
+		} else {
+			tfulldirt();
+		}
+		return;
 	case 'k': /* old title set compatibility */
-		xsettitle(strescseq.args[0]);
+		xsettitle(strescseq.buf);
 		return;
 	case 'P': /* DCS -- Device Control String */
 	case '_': /* APC -- Application Program Command */
