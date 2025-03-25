@@ -2138,6 +2138,12 @@ run:
 
 	if (!opt_title)
 		opt_title = (opt_line || !opt_cmd) ? "kst" : opt_cmd[0];
+	
+	if (!opt_name)
+		opt_name = "kst";
+	
+	if (!opt_class)
+		opt_class = "kst";
 
 	setlocale(LC_CTYPE, "");
 	XSetLocaleModifiers("");
