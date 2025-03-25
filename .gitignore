@@ -1,0 +1,26 @@
+# Object files
+*.o
+*.so
+*.ko
+
+# Binaries
+st
+st-*
+
+# Configuration file (allow config.def.h only)
+config.h
+
+# Patch original/reject files
+*.orig
+*.rej
+
+# Other temp files
+*~
+\#*\#
+.\#*
+
+# Dependencies
+.deps/
+
+# Build directory
+build/
