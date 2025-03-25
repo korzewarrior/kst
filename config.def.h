@@ -2,6 +2,11 @@
 
 /* Appearance */
 static char *font = "JetBrainsMono NFM:pixelsize=14:antialias=true:autohint=true";
+/* Spare fonts */
+static char *font2[] = {
+	"Noto Color Emoji:pixelsize=12:antialias=true:autohint=true",
+	"Symbols Nerd Font:pixelsize=14:antialias=true:autohint=true",
+};
 static int borderpx = 2;
 float alpha = 0.98;
 
@@ -54,13 +59,28 @@ char *termname = "st-256color";
 char *vtiden = "\033[?6c";
 
 /* UI settings */
-static unsigned int cursorshape = 2;
 static unsigned int cols = 80;
 static unsigned int rows = 24;
 static unsigned int mouseshape = XC_xterm;
 static unsigned int mousefg = 7;
 static unsigned int mousebg = 0;
 static unsigned int defaultattr = 11;
+
+/*
+ * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps-SP-q.1D81
+ * Default style of cursor
+ * 0: blinking block
+ * 1: blinking block (default)
+ * 2: steady block ("█")
+ * 3: blinking underline
+ * 4: steady underline ("_")
+ * 5: blinking bar
+ * 6: steady bar ("|")
+ * 7: blinking st cursor
+ * 8: steady st cursor
+ */
+static unsigned int cursorstyle = 1;
+static Rune stcursor = 0x2603; /* snowman ("☃") */
 
 /* Behavior settings */
 wchar_t *worddelimiters = L" ";
@@ -72,6 +92,19 @@ static double minlatency = 2;
 static double maxlatency = 33;
 static unsigned int blinktimeout = 800;
 static unsigned int cursorthickness = 2;
+
+/*
+ * 1: render most of the lines/blocks characters without using the font for
+ *    perfect alignment between cells (U2500 - U259F except dashes/diagonals).
+ *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
+ * 0: disable (render all U25XX glyphs normally from the font).
+ */
+const int boxdraw = 1;
+const int boxdraw_bold = 1;
+
+/* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
+const int boxdraw_braille = 1;
+
 static int bellvolume = 0;
 static uint forcemousemod = ShiftMask;
 

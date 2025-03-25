@@ -16,6 +16,9 @@
 #include <termios.h>
 #include <unistd.h>
 #include <wchar.h>
+#include <wctype.h>
+#include <X11/keysym.h>
+#include <X11/X.h>
 
 #include "st.h"
 #include "win.h"
@@ -1285,6 +1288,9 @@ tsetchar(Rune u, const Glyph *attr, int x, int y)
 	term.dirty[y] = 1;
 	term.line[y][x] = *attr;
 	term.line[y][x].u = u;
+
+	if (isboxdraw(u))
+		term.line[y][x].mode |= ATTR_BOXDRAW;
 }
 
 void
@@ -2755,4 +2761,25 @@ redraw(void)
 {
 	tfulldirt();
 	draw();
+}
+
+void
+set_notifmode(int type, KeySym ksym) {
+    /* Empty implementation */
+}
+
+void
+select_or_drawcursor(int selectsearch_mode, int type) {
+    /* Empty implementation */
+}
+
+void
+search(int selectsearch_mode, Rune *target, int ptarget, int incr, int type, TCursor *cu) {
+    /* Empty implementation */
+}
+
+int
+trt_kbdselect(KeySym ksym, char *buf, int len) {
+    /* Empty implementation */
+    return 0;
 }

@@ -5,7 +5,7 @@
 
 include config.mk
 
-SRC = st.c x.c
+SRC = st.c x.c boxdraw.c
 OBJ = $(SRC:.c=.o)
 
 all: kst
@@ -15,6 +15,10 @@ config.h:
 
 .c.o:
 	$(CC) $(STCFLAGS) -c $<
+
+st.o: config.h st.h win.h
+x.o: arg.h config.h st.h win.h
+boxdraw.o: config.h st.h boxdraw_data.h
 
 $(OBJ): config.h config.mk
 
@@ -27,7 +31,8 @@ clean:
 dist: clean
 	mkdir -p kst-$(VERSION)
 	cp -R LICENSE Makefile README.md arg.h config.def.h config.mk kst.info \
-		kst.1 st.h st.c x.c patches kst-$(VERSION)
+		kst.1 st.h st.c x.c boxdraw.c boxdraw_data.h \
+		win.h patches kst-$(VERSION)
 	tar -cf - kst-$(VERSION) | gzip > kst-$(VERSION).tar.gz
 	rm -rf kst-$(VERSION)
 
