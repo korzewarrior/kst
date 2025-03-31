@@ -1651,6 +1651,7 @@ xsetenv(void)
 
 	snprintf(buf, sizeof(buf), "%lu", xw.win);
 	setenv("WINDOWID", buf, 1);
+	setenv("TERMINAL_FONT", font, 1);
 }
 
 void
