@@ -1,0 +1,13 @@
+all:
+	cc -c st.c `pkg-config --cflags fontconfig freetype2` -I/usr/X11R6/include -DVERSION=\"0.9.2\" -D_XOPEN_SOURCE=600
+	cc -c x.c `pkg-config --cflags fontconfig freetype2` -I/usr/X11R6/include -DVERSION=\"0.9.2\" -D_XOPEN_SOURCE=600
+	cc -c boxdraw.c `pkg-config --cflags fontconfig freetype2` -I/usr/X11R6/include -DVERSION=\"0.9.2\" -D_XOPEN_SOURCE=600
+	cc -o kst st.o x.o boxdraw.o -L/usr/X11R6/lib -lm -lrt -lX11 -lutil -lXft `pkg-config --libs fontconfig freetype2`
+
+install:
+	mkdir -p /usr/local/bin
+	cp -f kst /usr/local/bin
+	chmod 755 /usr/local/bin/kst
+
+clean:
+	rm -f kst *.o 

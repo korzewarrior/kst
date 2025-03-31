@@ -46,8 +46,8 @@ static const char *colorname[] = {
 /* Default colors (colorname index) */
 unsigned int defaultfg = 256;
 unsigned int defaultbg = 257;
-unsigned int defaultcs = 256;
-static unsigned int defaultrcs = 257;
+unsigned int defaultcs = 1;  /* Red for cursor/selection - matching kitty and foot */
+static unsigned int defaultrcs = 1;  /* Red for reverse cursor/selection */
 
 /* Terminal settings */
 static char *shell = "/bin/sh";
